@@ -11,30 +11,46 @@ export class AppComponent {
   myColor: string = this.startColor;
   counter: number = 1;
   timeoutId: null | ReturnType<typeof setTimeout> = null;
+  colors: Array<string> = ['green', 'red'];
+  toggleColorText: string = 'resume';
 
   startColorSemaphore(): void {
-    this.timeoutId = setInterval(() => {
-        this.counter = (this.counter + 1) % 2
+    this.stopColorSemaphore();
 
-        if (this.counter == 0) { this.myColor = 'green'; }
-        else { this.myColor = 'red'; }
-      }, 2500);
+    this.timeoutId = setInterval(() => {
+        if (this.counter == this.colors.length - 1) { this.counter = 0 }
+        else { this.counter += 1 }
+
+        this.myColor = this.colors[this.counter]
+      }, 800);
+
+    this.toggleColorText = 'pause';
   }
 
   stopColorSemaphore(): void {
     if (this.timeoutId != null) {
       clearInterval(this.timeoutId);
+      this.toggleColorText = 'resume';
+      this.timeoutId = null;
     }
   }
 
-  changeStartColor(newColor: string = this.myColor): void {
-    this.startColor = newColor;
+  toggleColorSemaphore(): void {
+    if (this.timeoutId != null) {
+      this.stopColorSemaphore();
+    } else {
+      this.startColorSemaphore();
+    }
   }
 
-  rotateColor(): void {
-    this.stopColorSemaphore();
+  addNewColor(newColorClass: null | string): void {
+    if (newColorClass === null) { return }
+
+    this.colors.push(newColorClass);
+  }
+
+  resetColor(): void {
     this.myColor = this.startColor;
-    this.startColorSemaphore();
   }
 
   constructor() {
