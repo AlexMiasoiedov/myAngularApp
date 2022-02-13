@@ -22,16 +22,15 @@ export class AppComponent {
         else { this.counter += 1 }
 
         this.myColor = this.colors[this.counter]
-      }, 800);
-
-    this.toggleColorText = 'pause';
+        this.toggleColorText = 'pause';
+      }, 1200);
   }
 
   stopColorSemaphore(): void {
     if (this.timeoutId != null) {
       clearInterval(this.timeoutId);
-      this.toggleColorText = 'resume';
       this.timeoutId = null;
+      this.toggleColorText = 'resume';
     }
   }
 
@@ -53,7 +52,18 @@ export class AppComponent {
     this.myColor = this.startColor;
   }
 
+  forceStartColor(): void {
+    this.stopColorSemaphore();
+    this.myColor = this.startColor;
+  }
+
+  releaseStartColor(): void {
+    console.log('releaseStartColor')
+    this.myColor = this.colors[this.counter];
+    this.startColorSemaphore();
+  }
+
   constructor() {
-    this.startColorSemaphore()
+    this.startColorSemaphore();
   }
 }
